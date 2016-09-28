@@ -9,8 +9,11 @@ use Illuminate\Http\Request;
 
 use App\Models\Department;
 use App\Models\Employee;
+use App\Models\Item;
+use App\Models\Category;
+use session; 
 
-class DepartmentController extends Controller
+class ItemController extends Controller
 {
     public function __construct()
     {
@@ -23,9 +26,8 @@ class DepartmentController extends Controller
         $this->dataDeleted = "data deleted successfully"; 
         $this->dataDeleteFail = "unable to delete data"; 
 
-        $this->user_id = 1; 
-
         $this->middleware('auth');
+
     }
     /**
     /**
@@ -37,14 +39,14 @@ class DepartmentController extends Controller
     {
         $user  = Auth::user();
 
-        $data = Department::where('is_active', 1)->get();
+        $data = Item::where('is_active', 1)->get();
 
         //response all permission to show hide accrodingly
         $permission = $user->getPermissions(); 
         if ($data->count() > 0) {
-            $res = ['status' => true, 'message' => $this->dataFound, 'data' => $data, 'permission' => $permission['department']]; 
+            $res = ['status' => true, 'message' => $this->dataFound, 'data' => $data, 'permission' => $permission['item']]; 
         } else {
-            $res = ['status' => true, 'message' => $this->dataNotFound, 'data' => null, 'permission' => $permission['department']]; 
+            $res = ['status' => true, 'message' => $this->dataNotFound, 'data' => null, 'permission' => $permission['item']]; 
         }
         return $res; 
     }
@@ -67,19 +69,29 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
+        $this->user = Auth::user()->toArray(); 
+        
         $this->validate($request, [
+            'item_no' => 'required',
             'name' => 'required',
+            'category_id' => 'required',
+            'description' => 'required',
             'is_active' => 'required',
         ]);
 
         $req = $request->all();
 
-        $data = new Department; 
+        $data = new Item; 
+        $data->item_no = $req['item_no']; 
         $data->name = $req['name']; 
+        $data->category_id = $req['category_id']; 
+        $data->brand = (isset($req['brand'])) ? $req['brand'] : null; 
+        $data->model = (isset($req['model'])) ? $req['model'] : null;  
+        $data->description = $req['description']; 
         $data->is_active = $req['is_active']; 
+        $data->created_by = $this->user['id']; 
 
         $data->save(); 
-
         if ($data) {
             $res = ['status' => true, 'message' => $this->dataInserted]; 
         } else {
@@ -107,7 +119,7 @@ class DepartmentController extends Controller
      */
     public function edit($id)
     {
-        $data = Department::where('is_active', 1)->find($id); 
+        $data = Item::where('is_active', 1)->find($id); 
         if ($data->count() > 0) {
             $res = ['status' => true, 'message' => $this->dataFound, 'data' => $data]; 
         } else {
@@ -125,16 +137,27 @@ class DepartmentController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $this->user = Auth::user()->toArray(); 
+
         $this->validate($request, [
+            'item_no' => 'required',
             'name' => 'required',
+            'category_id' => 'required',
+            'description' => 'required',
             'is_active' => 'required',
         ]);
 
         $req = $request->all();
 
-        $data = Department::where('is_active', 1)->find($id); 
+        $data = Item::where('is_active', 1)->find($id); 
+        $data->item_no = $req['item_no']; 
         $data->name = $req['name']; 
+        $data->category_id = $req['category_id']; 
+        $data->brand = (isset($req['brand'])) ? $req['brand'] : null; 
+        $data->model = (isset($req['model'])) ? $req['model'] : null;  
+        $data->description = $req['description']; 
         $data->is_active = $req['is_active']; 
+        $data->updated_by = $this->user['id']; 
 
         $data->save(); 
 
@@ -154,10 +177,10 @@ class DepartmentController extends Controller
      */
     public function destroy($id)
     {
-        //check there any employee belogns to that department 
-        $emp  = Employee::where(['department_id' => $id, 'is_active' => 1])->first(); 
-        if ($emp === null) {
-            $data = Department::find($id); 
+        //check there any employee belogns to that Item 
+        $item  = Item::where(['Item_id' => $id, 'is_active' => 1])->first(); 
+        if ($item === null) {
+            $data = Item::find($id); 
 
             if ($data->delete()) {
                 $res = ['status' => true, 'message' => $this->dataDeleted]; 
@@ -165,7 +188,24 @@ class DepartmentController extends Controller
                 $res = ['status' => true, 'message' => $this->dataDeleteFail]; 
             }
         } else {
-            $res = ['status' => false, 'message' => "You can't delete this department"]; 
+            $res = ['status' => false, 'message' => "You can't delete this Item"]; 
+        }
+        return $res; 
+    }
+
+    /**
+     * Show the profile for the given user.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function categoryList()
+    {
+        $data = Category::where('is_active', 1)->get(); 
+        if ($data->count() > 0) {
+            $res = ['status' => true, 'message' => $this->dataFound, 'data' => $data]; 
+        } else {
+            $res = ['status' => true, 'message' => $this->dataNotFound, 'data' => null]; 
         }
         return $res; 
     }

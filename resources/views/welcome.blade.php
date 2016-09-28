@@ -30,7 +30,7 @@
             }
         </style>
         <script>
-            base_url = "http://localhost:8000/";</script>
+            base_url = "http://localhost:8080/";</script>
     </head>
 
     <body ng-app="myApp" layout="row" ng-cloak ng-controller="MenuController as menu">
@@ -51,6 +51,12 @@
                     {{menuItem.title}}
                 </md-button>
             </md-list-item>
+            <md-list-item ng-repeat="menuItem in menu.menuItems">
+                <md-button
+                    ng-click="menu.logout()">
+                    Logout
+                </md-button>
+            </md-list-item>
         </md-list>
 
     </md-sidenav>
@@ -65,6 +71,7 @@
                 </md-button>
             </div>
             <h1 flex-gt-sm>My Awesome Application</h1>
+
             <div class="menu" hide-sm hide-xs>
                 <md-button
                     ui-sref=".{{menuItem.href}}"
@@ -73,10 +80,14 @@
                     ng-class="{active: menu.selected.title === menuItem.title}">
                     {{menuItem.title}}
                 </md-button>
+                <md-button ng-click="menu.logout()">Logout</md-button>
             </div>
         </md-toolbar>
 
         <md-content flex id="content" class="md-whiteframe-z2" md-scroll-y>
+        <div class="site-title" ng-if="menu.selected.title">
+                <h2 class="light">{{menu.selected.title}}</h2>
+            </div>
            <div ui-view class="view-transition"></div>
         </md-content>
 

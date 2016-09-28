@@ -60,8 +60,14 @@
         };
 
         $scope.loadData = function () {
-          $http.get(url).success(function (response) {
-            $scope.datas = response;
+          $http.get(url).success(function (res) {
+            if (res.status) {
+                $scope.datas = res;
+                $scope.permissions = res.permission;
+            } else {
+                $mdToast.show($mdToast.simple().textContent(res.message).position('top right'));
+            }
+            
 
             // $scope.selected.push($scope.desserts.data[1]);
 
@@ -174,7 +180,7 @@
         }
 
         $scope.save = function (data) {
-            console.log(data); 
+            // console.log(data); 
 
             if (data.id && data.id !== null) {
                 //update
@@ -239,6 +245,10 @@
                         $scope.loadData(); 
                     }
                     $mdToast.show($mdToast.simple().textContent(res.message).position('top right'));
+                }).error(function(error, code){
+                    if (code == 401) {
+                        $mdToast.show($mdToast.simple().textContent(error.error.description).position('top right'));
+                    }
                 }); 
             }, function() {
               //if use click on cancel 

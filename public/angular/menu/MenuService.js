@@ -14,14 +14,30 @@
    */
   function MenuService($q){
     var menuItems = [
+    
       {
         title: 'Employee',
         href: 'employee',
         colorHex: 'A53434'
       },
       {
+        title: 'Item',
+        href: 'item',
+        colorHex: 'A53434'
+      },
+      {
         title: 'Department',
         href: 'department',
+        colorHex: '#3b78e7'
+      },
+      {
+        title: 'Categories',
+        href: 'category',
+        colorHex: '#3b78e7'
+      },
+      {
+        title: 'Supplier',
+        href: 'supplier',
         colorHex: '#3b78e7'
       },
       {
@@ -38,7 +54,7 @@
         title: 'Home',
         href: 'home',
         colorHex: '#fdba2c'
-      }
+      },
     ];
 
     // Promise-based API

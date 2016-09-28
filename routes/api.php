@@ -17,11 +17,3 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
 
-Route::get('test', "Controller@test");
-
-Route::get('employee/department_list', "EmployeeController@departmentList");
-Route::get('employee/all', "EmployeeController@index");
-Route::resource('employee', 'EmployeeController');
-
-
-

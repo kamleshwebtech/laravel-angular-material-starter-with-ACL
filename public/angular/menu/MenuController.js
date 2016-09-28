@@ -3,7 +3,7 @@
   angular
        .module('menu')
        .controller('MenuController', [
-          'menuService', '$location', '$mdSidenav', '$mdBottomSheet', '$mdInkRipple', '$log', '$q',
+          '$scope', '$http', 'menuService', '$location', '$mdSidenav', '$mdBottomSheet', '$mdInkRipple', '$log', '$q', '$window',
           MenuController
        ]);
 
@@ -14,13 +14,14 @@
    * @param avatarsService
    * @constructor
    */
-  function MenuController( menuService, $location, $mdSidenav, $mdBottomSheet, $mdInkRipple, $log, $q) {
+  function MenuController($scope, $http, menuService, $location, $mdSidenav, $mdBottomSheet, $mdInkRipple, $log, $q, $window) {
     var self = this;
     var currentPage = $location.path();
 
     self.menuItems        = [ ];
     self.setActiveMenu  = setActiveMenu;
     self.toggleView = toggleView;
+    self.logout = logout;
 
     // Load all menu items
 
@@ -55,6 +56,13 @@
       if (toggleMenu) {
         toggleView();
       }
+    }
+
+    function logout () {
+      console.log("found"); 
+      $http.post("/logout").success(function(res){
+        $window.location.reload();
+      })
     }
 
     /**

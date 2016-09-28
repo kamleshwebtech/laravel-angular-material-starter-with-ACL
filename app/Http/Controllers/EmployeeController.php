@@ -9,6 +9,7 @@ use App\Models\Department;
 use App\Models\Employee;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
 //use App\Department; 
@@ -32,6 +33,8 @@ class EmployeeController extends Controller
         $this->dataDeleteFail = "unable to delete data"; 
 
         $this->user_id = 1; 
+
+        $this->middleware('auth');
     }
     /**
      * Display a listing of the resource.
@@ -39,14 +42,17 @@ class EmployeeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //check is priviliged to see all data. 
+    {   
+        $user  = Auth::user();
+
     	$data = Employee::where('is_active', 1)->get();
 
+        //response all permission to show hide accrodingly
+        $permission = $user->getPermissions(); 
     	if ($data->count() > 0) {
-    		$res = ['status' => true, 'message' => $this->dataFound, 'data' => $data]; 
+    		$res = ['status' => true, 'message' => $this->dataFound, 'data' => $data, 'permission' => $permission['employee']]; 
     	} else {
-    		$res = ['status' => true, 'message' => $this->dataNotFound, 'data' => null]; 
+    		$res = ['status' => true, 'message' => $this->dataNotFound, 'data' => null, 'permission' => $permission['employee']]; 
     	}
     	return $res; 
     }

@@ -7,10 +7,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
-use App\Models\Department;
-use App\Models\Employee;
+use App\Models\Supplier;
 
-class DepartmentController extends Controller
+class SupplierController extends Controller
 {
     public function __construct()
     {
@@ -37,14 +36,14 @@ class DepartmentController extends Controller
     {
         $user  = Auth::user();
 
-        $data = Department::where('is_active', 1)->get();
+        $data = Supplier::where('is_active', 1)->get();
 
         //response all permission to show hide accrodingly
         $permission = $user->getPermissions(); 
         if ($data->count() > 0) {
-            $res = ['status' => true, 'message' => $this->dataFound, 'data' => $data, 'permission' => $permission['department']]; 
+            $res = ['status' => true, 'message' => $this->dataFound, 'data' => $data, 'permission' => $permission['supplier']]; 
         } else {
-            $res = ['status' => true, 'message' => $this->dataNotFound, 'data' => null, 'permission' => $permission['department']]; 
+            $res = ['status' => true, 'message' => $this->dataNotFound, 'data' => null, 'permission' => $permission['supplier']]; 
         }
         return $res; 
     }
@@ -74,8 +73,10 @@ class DepartmentController extends Controller
 
         $req = $request->all();
 
-        $data = new Department; 
+        $data = new Supplier; 
         $data->name = $req['name']; 
+        $data->address = (isset($req['address']) ? $req['address'] : null); 
+        $data->contact = (isset($req['contact']) ? $req['contact'] : null); 
         $data->is_active = $req['is_active']; 
 
         $data->save(); 
@@ -107,7 +108,7 @@ class DepartmentController extends Controller
      */
     public function edit($id)
     {
-        $data = Department::where('is_active', 1)->find($id); 
+        $data = Supplier::where('is_active', 1)->find($id); 
         if ($data->count() > 0) {
             $res = ['status' => true, 'message' => $this->dataFound, 'data' => $data]; 
         } else {
@@ -132,8 +133,10 @@ class DepartmentController extends Controller
 
         $req = $request->all();
 
-        $data = Department::where('is_active', 1)->find($id); 
+        $data = Supplier::where('is_active', 1)->find($id); 
         $data->name = $req['name']; 
+        $data->address = (isset($req['address']) ? $req['address'] : null); 
+        $data->contact = (isset($req['contact']) ? $req['contact'] : null); 
         $data->is_active = $req['is_active']; 
 
         $data->save(); 
@@ -154,10 +157,10 @@ class DepartmentController extends Controller
      */
     public function destroy($id)
     {
-        //check there any employee belogns to that department 
-        $emp  = Employee::where(['department_id' => $id, 'is_active' => 1])->first(); 
+        //check there any employee belogns to that Supplier 
+        $emp  = Employee::where(['Supplier_id' => $id, 'is_active' => 1])->first(); 
         if ($emp === null) {
-            $data = Department::find($id); 
+            $data = Supplier::find($id); 
 
             if ($data->delete()) {
                 $res = ['status' => true, 'message' => $this->dataDeleted]; 
@@ -165,7 +168,7 @@ class DepartmentController extends Controller
                 $res = ['status' => true, 'message' => $this->dataDeleteFail]; 
             }
         } else {
-            $res = ['status' => false, 'message' => "You can't delete this department"]; 
+            $res = ['status' => false, 'message' => "You can't delete this Supplier"]; 
         }
         return $res; 
     }

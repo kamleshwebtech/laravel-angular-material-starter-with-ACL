@@ -1,26 +1,34 @@
-<form name="deptForm" ng-submit="save(department)">
+<form name="form" ng-submit="save(data)">
       <div layout-gt-sm="row">
 
         <md-input-container class="md-block" flex-gt-sm>
           <label>Name</label>
-          <input required name="name" ng-model="department.name" />
+          <input required name="name" ng-model="data.name" />
 
-          <div ng-messages="deptForm.name.$error">
+          <div ng-messages="form.name.$error">
             <div ng-message="required">Name is required.</div>
           </div>
         </md-input-container>
 
+        <md-input-container class="md-block" flex-gt-sm>
+          <label>Description</label>
+          <input required name="description" ng-model="data.description" />
+
+          <div ng-messages="form.description.$error">
+            <div ng-message="required">Description is required.</div>
+          </div>
+        </md-input-container>
+ <!-- 
         <div flex="5" hide-xs hide-sm>
-          <!-- Spacer //-->
-        </div>
+        </div> --> 
 
         <md-input-container class="md-block" flex-gt-sm>
           <label>Is Active</label>
-          <md-select name="is_active" ng-model="department.is_active" required>
+          <md-select name="is_active" ng-model="data.is_active" required>
                 <md-option value="1">Active</md-option>
                 <md-option value="0">Inactive</md-option>
               </md-select>
-          <div ng-messages="deptForm.is_active.$error">
+          <div ng-messages="form.is_active.$error">
             <div ng-message="required">Status is Required</div>
           </div>
         </md-input-container>

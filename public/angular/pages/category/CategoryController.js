@@ -3,19 +3,19 @@
 
   // Prepare the 'purpose' module for subsequent registration of controllers and delegates
   angular.module('myApp', [ 'ngMaterial', 'ui.router' ])
-  .controller('DepartmentController', [
-           '$http', '$scope', '$mdEditDialog', '$q', '$timeout', '$mdDialog', '$mdToast', DepartmentController
+  .controller('CategoryController', [
+           '$http', '$scope', '$mdEditDialog', '$q', '$timeout', '$mdDialog', '$mdToast', CategoryController
        ]);
 
   /**
    * Controller
    * @constructor
    */
-  function DepartmentController($http, $scope, $mdEditDialog, $q, $timeout, $mdDialog, $mdToast) {
+  function CategoryController($http, $scope, $mdEditDialog, $q, $timeout, $mdDialog, $mdToast) {
     var self = this;
-    $scope.pageName = "Department"; 
+    $scope.pageName = "Category"; 
     $scope.selectedTab = 0; 
-    var url = base_url + 'api/department/'; 
+    var url = base_url + 'api/category/'; 
 
         $scope.optionShow  = false;
 
@@ -46,6 +46,7 @@
 
         $scope.loadData = function () {
           $http.get(url).success(function (res) {
+            console.log(res); 
             if (res.status) {
                 $scope.datas = res;
                 $scope.permissions = res.permission;
@@ -138,7 +139,7 @@
                 //update
                 $http.put(url + data.id, data).success(function(res){
                     if (res.status) {
-                        $scope.department = {}; 
+                        $scope.employee = {}; 
                         $scope.selectedTab = 0; 
                         $scope.loadData(); 
                     } else {
@@ -153,7 +154,7 @@
                 //insert
                 $http.post(url, data).success(function(res){
                     if (res.status) {
-                        $scope.department = {}; 
+                        $scope.employee = {}; 
                         $scope.selectedTab = 0; 
                         $scope.loadData(); 
                     } else {
@@ -169,7 +170,7 @@
                 console.log(res); 
                 if (res.status) {
                     $scope.selectedTab = 1; 
-                    $scope.department = res.data; 
+                    $scope.data = res.data; 
                 } else {
                     //toastr
 
